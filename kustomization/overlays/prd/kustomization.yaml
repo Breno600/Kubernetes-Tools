@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+- ingress.yaml
+- configmap.yaml
+images:
+- name: IMAGE
+  newName: {{DOCKER_REPOSITORY}}/{{DOCKER_IMAGE}}
+  newTag: {{DOCKER_TAG}}
+
+patchesStrategicMerge:
+- replicas-patch.yaml

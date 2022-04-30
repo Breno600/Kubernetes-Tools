@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{APP_NAME}}
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: {{APP_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{APP_NAME}}
+    spec:
+      containers:
+      - name: {{APP_NAME}}
+        image: IMAGE:TAG
+        ports:
+        - name: http
+          containerPort: {{PORT}}
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "640Mi"
+            cpu: "750m"
+        envFrom:
+        - configMapRef:
+            name: {{APP_NAME}}
+        - secretRef:
+            name: {{APP_NAME}}
