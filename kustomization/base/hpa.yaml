@@ -5,7 +5,7 @@ metadata:
   name: {{APP_NAME}}
 spec:
   minReplicas: 1
-  maxReplicas: 1
+  maxReplicas: 3
   behavior:
     scaleDown:
       selectPolicy: Disabled
