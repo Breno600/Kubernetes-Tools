@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ NAME_APP }}
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: {{ NAME_APP }}
+  template:
+    metadata:
+      labels:
+        app: {{ NAME_APP }}
+    spec:
+      serviceAccountName: {{ NAME_SERVICE_ACCOUNT }}
+      containers:
+      - name: {{ NAME_APP }}
+        image: {{ IMAGE:TAG }}
+        ports:
+        - name: http
+          containerPort: {{ PORT }}
+        resources:
+          limits:
+            cpu: "750m"
+            memory: "640Mi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 3
+          failureThreshold: 2
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: index.html
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        #securityContext:
+          #privileged: false
+          #runAsNonRoot: true
+          #readOnlyRootFilesystem: true
+          #runAsUser: 10001
+          #runAsGroup: 10001
+          #runAsNonRoot: true
+          #capabilities:
+            #drop:
+              #- all
+        envFrom:
+        - configMapRef:
+            name: {{ NAME_APP }}
+        - secretRef:
+            name: {{ NAME_APP }}
